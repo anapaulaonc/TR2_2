@@ -8,6 +8,7 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER, CONFIG_DISPATCHER, set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.controller.handler import set_ev_cls
+import time
 
 #criando a classe  do aplicativo Ryu que sera responsavel por manipular as regras OpenFlow
 class SecurityApp(app_manager.RyuApp):
@@ -76,12 +77,15 @@ class CustomTopology:
         for switch in self.switches.values():
             switch.linkTo(self.controller)
         #iniciando a rede do Mininet
+        self.net.build()
         self.net.start()
+
+        time.sleep(3)
         #executando um teste de ping para garantir que todos hosts estao alcancaveis
         self.net.pingAll()
 
         ryu_app = SecurityApp()
-        ryu_app.start([self])
+        ryu_app.start()
 
         #iniciando a interface da linha de comando do Mininet
         CLI(self.net)
@@ -89,8 +93,8 @@ class CustomTopology:
         self.net.stop()
 
 
-    
-            
+
+
 
 
 setLogLevel('info')
