@@ -29,11 +29,17 @@ $ python3 -V
 
 ```
 $ sudo apt-get install mininet
+$ #mn
+```
+
+- confirm if vsswitch is installed with mininet
+
+```
 $ sudo apt-get install openvswitch-switch
 $ sudo service openvswitch-switch start
 ```
 
-- openflow
+- if wireshark not installed
 
 ```
 $git clone https://github.com/mininet/mininet
