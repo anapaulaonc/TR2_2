@@ -3,60 +3,45 @@ from mininet.node import Controller, OVSSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel
 
-def create_topology():
-    net = Mininet(topo = None, controller=Controller)
+class CustomTopology:
+    def __init__(self):
+        self.net = None
+        self.controller = None
+        self.switches = {}
+        self.hosts = {}
 
-    # Adicione um controlador
-    c0 = net.addController('c0', controller=Controller)
+    def create_topology(self):
+        self.net = Mininet(topo=None, controller=Controller)
+        self.controller = self.net.addController('c0', controller=Controller)
 
-    # Adicione quatro switches OpenFlow habilitados
-    s1 = net.addSwitch('s1')
-    s2 = net.addSwitch('s2')
-    s3 = net.addSwitch('s3')
-    s4 = net.addSwitch('s4')
+        # Adicione quatro switches OpenFlow habilitados
+        for i in range(1, 5):
+            switch_name = f's{i}'
+            switch = self.net.addSwitch(switch_name)
+            self.switches[switch_name] = switch
 
-    # Adicione dez hosts
-    h1 = net.addHost('h1', ip="10.0.0.1")
-    h2 = net.addHost('h2', ip="10.0.0.2")
-    h3 = net.addHost('h3', ip="10.0.0.3")
-    h4 = net.addHost('h4', ip="10.0.0.4")
-    h5 = net.addHost('h5', ip="10.0.0.5")
-    h6 = net.addHost('h6', ip="10.0.0.6")
-    h7 = net.addHost('h7', ip="10.0.0.7")
-    h8 = net.addHost('h8', ip="10.0.0.8")
-    h9 = net.addHost('h9', ip="10.0.0.9")
-    h10 = net.addHost('h10', ip="10.0.0.10")
-    # Adicione mais oito hosts aqui...
+        # Adicione dez hosts
+        for i in range(1, 11):
+            host_name = f'h{i}'
+            host_ip = f'10.0.0.{i}'
+            host = self.net.addHost(host_name, ip=host_ip)
+            self.hosts[host_name] = host
 
-    # Conecte hosts aos switches
-    net.addLink(h1, s1)
-    net.addLink(h2, s1)
-    net.addLink(h3, s1)
-    net.addLink(h4, s2)
-    net.addLink(h5, s2)
-    net.addLink(h6, s2)
-    net.addLink(h7, s3)
-    net.addLink(h8, s3)
-    net.addLink(h9, s4)
-    net.addLink(h10, s4)
-    # Adicione mais links entre hosts e switches aqui...
+        # Conecte hosts aos switches
+        host_list = list(self.hosts.values())
+        for i, switch in enumerate(self.switches.values()):
+            switch.linkTo(host_list[i % len(host_list)])
 
-    # Conecte os switches ao controlador
-    # net.addLink(s1, c0)
-    # net.addLink(s2, c0)
-    # net.addLink(s3, c0)
-    # net.addLink(s4, c0)
+        # Conecte os switches ao controlador
+        for switch in self.switches.values():
+            switch.linkTo(self.controller)
 
-    net.build()
-    c0.start()
-    s1.start([c0])
-    s2.start([c0])
-    s3.start([c0])
-    s4.start([c0])
-    net.pingAll()
-    CLI(net)
-    net.stop()
+        self.net.start()
+        self.net.pingAll()
+        CLI(self.net)
+        self.net.stop()
 
-
-setLogLevel('info')
-create_topology()
+if __name__ == '__main__':
+    setLogLevel('info')
+    topology = CustomTopology()
+    topology.create_topology()
