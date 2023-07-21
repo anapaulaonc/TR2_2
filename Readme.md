@@ -39,7 +39,7 @@ $ sudo apt-get install openvswitch-switch
 $ sudo service openvswitch-switch start
 ```
 
-- if wireshark not installed
+- if wireshark not installed and references controllers and switches
 
 ```
 $git clone https://github.com/mininet/mininet
@@ -48,13 +48,20 @@ $ mininet/util/install.sh -fw
 
 # Before Project Run
 
+clear mininet cash
+`sudo mn -c`
+
 # Run Project
+
+inside the project folder run:
+`sudo mn --custom topologia.py`
 
 # References
 
 - [walkthrough mininet](http://mininet.org/walkthrough/)
 - [drive document](https://docs.google.com/document/d/1f0QPhMonsCHjrotPNxG3TVrlpLRyDazT0nE1HL6KgOM/edit)
 - [install python](https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-programming-environment-on-an-ubuntu-22-04-server)
+- [videos Reference](https://www.youtube.com/playlist?list=PLpherdrLyny8YN4M24iRJBMCXkLcGbmhY)
 
 # Extra
 
